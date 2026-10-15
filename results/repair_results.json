@@ -1,0 +1,79 @@
+{
+  "baseline_dice": 0.5575693249702454,
+  "n_steps": 32,
+  "n_test_images": 50,
+  "experiments": {
+    "sev=10%_step=8(25%)": {
+      "severity": 0.1,
+      "damage_step": 8,
+      "damage_frac": 0.25,
+      "dice_vs_gt": 0.5605192184448242,
+      "dice_vs_undamaged": 0.7447314262390137,
+      "dice_recovery": 1.005290630855161
+    },
+    "sev=10%_step=16(50%)": {
+      "severity": 0.1,
+      "damage_step": 16,
+      "damage_frac": 0.5,
+      "dice_vs_gt": 0.5544067621231079,
+      "dice_vs_undamaged": 0.7355077862739563,
+      "dice_recovery": 0.9943279468480333
+    },
+    "sev=10%_step=24(75%)": {
+      "severity": 0.1,
+      "damage_step": 24,
+      "damage_frac": 0.75,
+      "dice_vs_gt": 0.553698718547821,
+      "dice_vs_undamaged": 0.7412768006324768,
+      "dice_recovery": 0.9930580714377878
+    },
+    "sev=30%_step=8(25%)": {
+      "severity": 0.3,
+      "damage_step": 8,
+      "damage_frac": 0.25,
+      "dice_vs_gt": 0.4911228120326996,
+      "dice_vs_undamaged": 0.6159279346466064,
+      "dice_recovery": 0.8808282486826339
+    },
+    "sev=30%_step=16(50%)": {
+      "severity": 0.3,
+      "damage_step": 16,
+      "damage_frac": 0.5,
+      "dice_vs_gt": 0.4408825933933258,
+      "dice_vs_undamaged": 0.54569011926651,
+      "dice_recovery": 0.7907224692047997
+    },
+    "sev=30%_step=24(75%)": {
+      "severity": 0.3,
+      "damage_step": 24,
+      "damage_frac": 0.75,
+      "dice_vs_gt": 0.500082790851593,
+      "dice_vs_undamaged": 0.5574803352355957,
+      "dice_recovery": 0.8968979613042376
+    },
+    "sev=50%_step=8(25%)": {
+      "severity": 0.5,
+      "damage_step": 8,
+      "damage_frac": 0.25,
+      "dice_vs_gt": 0.48317086696624756,
+      "dice_vs_undamaged": 0.6009216904640198,
+      "dice_recovery": 0.8665664435396118
+    },
+    "sev=50%_step=16(50%)": {
+      "severity": 0.5,
+      "damage_step": 16,
+      "damage_frac": 0.5,
+      "dice_vs_gt": 0.41544169187545776,
+      "dice_vs_undamaged": 0.5141786336898804,
+      "dice_recovery": 0.7450942389946358
+    },
+    "sev=50%_step=24(75%)": {
+      "severity": 0.5,
+      "damage_step": 24,
+      "damage_frac": 0.75,
+      "dice_vs_gt": 0.43674957752227783,
+      "dice_vs_undamaged": 0.4817507863044739,
+      "dice_recovery": 0.7833099095714868
+    }
+  }
+}
