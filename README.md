@@ -67,7 +67,7 @@ python scripts/visualize.py
 
 Full experimental write-up and analysis: see [docs/REPORT.md](docs/REPORT.md).
 
-## Shortcuts Taken Due to 1-Day Scope
+## Shortcuts Taken Due to time and hardware constraint
 - **2D only**: we extract axial slices from 3D volumes instead of doing full 3D NCA.
 - **Small dataset**: 40 volumes (1,044 slices) subset of Task04, not the full dataset.
 - **Small image size**: 64×64 to fit in 4 GB VRAM with fast backprop-through-time.
