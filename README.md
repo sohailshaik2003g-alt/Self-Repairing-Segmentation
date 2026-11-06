@@ -1,11 +1,13 @@
-# Self-Repairing Neural Cellular Automata for 2D Medical Image Segmentation
+# Hippocampus Segmentation: NCA & nnUNet Approaches
 
-> **Proof-of-Concept & Optimization Study** investigating whether a Neural Cellular Automata (NCA)
-> segmentation model exhibits self-repair properties — i.e., can it recover a correct
-> segmentation after its internal cell-state grid is deliberately corrupted mid-inference?
+> Two complementary implementations for hippocampus segmentation (Medical Segmentation Decathlon Task04):
+>
+> 1. **Neural Cellular Automata (NCA)** — a proof-of-concept exploring self-repair properties in segmentation
+> 2. **nnUNet** — a state-of-the-art self-configuring medical segmentation framework
 
 Inspired by [Growing Neural Cellular Automata](https://distill.pub/2020/growing-ca/)
-(Mordvintsev et al., 2020), applied to 2D hippocampus segmentation from the
+(Mordvintsev et al., 2020) and [nnU-Net: a self-configuring method](https://www.nature.com/articles/s41592-020-01008-z)
+(Isensee et al., 2021), applied to 2D hippocampus segmentation from the
 [Medical Segmentation Decathlon Task04](http://medicaldecathlon.com/).
 
 ## Hardware Target
@@ -14,6 +16,7 @@ Inspired by [Growing Neural Cellular Automata](https://distill.pub/2020/growing-
 
 ## Quick Start
 
+### NCA Approach
 ```bash
 # 1. Install dependencies
 pip install -r requirements.txt
@@ -32,32 +35,62 @@ python scripts/repair_experiment.py
 python scripts/visualize.py
 ```
 
+### nnUNet Approach
+```powershell
+# 1. Install nnUNet
+pip install nnunetv2
+
+# 2. Set environment variables
+$env:nnUNet_raw          = "e:\Self repairing segmentation\data\nnunet_raw"
+$env:nnUNet_preprocessed = "e:\Self repairing segmentation\data\nnunet_preprocessed"
+$env:nnUNet_results      = "e:\Self repairing segmentation\data\nnunet_results"
+
+# 3. Plan & preprocess (already done — skips if outputs exist)
+python -m nnunetv2.experiment_planning.plan_and_preprocess_entrypoints -d 004 -c 2d
+
+# 4. Train (2D config for 4 GB VRAM, fold 0)
+python nnunet/run_training.py --fold 0 --device cuda
+
+# 5. Predict + Evaluate
+python nnunet/run_predict_eval.py --fold 0
+```
+
 ## Project Structure
 ```
 ├── README.md
 ├── requirements.txt
-├── src/
+├── src/                        # NCA implementation
 │   ├── __init__.py
-│   ├── dataset.py          # PyTorch Dataset supporting Albumentations + TorchIO
-│   ├── augmentations.py    # Combined Albumentations & TorchIO pipeline
-│   ├── nca_model.py        # NCA segmentation model
-│   ├── train_utils.py      # Training loop, losses, metrics
-│   ├── damage.py           # Damage/corruption functions
-│   └── visualization.py    # Plotting & GIF generation
-├── scripts/
-│   ├── download_data.py    # Download Task04 hippocampus
-│   ├── preprocess_data.py  # Extract 2D slices from 3D NIfTI
-│   ├── train.py            # Main training script (supports --augment)
-│   ├── repair_experiment.py# Self-repair sweep experiment
-│   └── visualize.py        # Generate figures & GIFs
-├── data/                   # Raw & processed data (gitignored)
-├── checkpoints/            # Model checkpoints (best_model_aug.pt)
-├── results/                # Experiment outputs, plots, GIFs
+│   ├── dataset.py              # PyTorch Dataset supporting Albumentations + TorchIO
+│   ├── augmentations.py        # Combined Albumentations & TorchIO pipeline
+│   ├── nca_model.py            # NCA segmentation model
+│   ├── train_utils.py          # Training loop, losses, metrics
+│   ├── damage.py               # Damage/corruption functions
+│   └── visualization.py        # Plotting & GIF generation
+├── scripts/                    # NCA pipeline scripts
+│   ├── download_data.py        # Download Task04 hippocampus
+│   ├── preprocess_data.py      # Extract 2D slices from 3D NIfTI
+│   ├── train.py                # Main NCA training script
+│   ├── repair_experiment.py    # Self-repair sweep experiment
+│   └── visualize.py            # Generate figures & GIFs
+├── nnunet/                     # nnUNet implementation
+│   ├── README.md               # nnUNet-specific instructions
+│   ├── setup_nnunet_dataset.py # One-time dataset setup
+│   ├── run_training.py         # Training launcher
+│   ├── run_predict_eval.py     # Inference + evaluation
+│   ├── train_nnunet.py         # Full pipeline wrapper
+│   └── evaluate_predictions.py # Dice evaluation & comparison
+├── data/                       # Raw & processed data (gitignored)
+├── checkpoints/                # NCA model checkpoints (best_model_aug.pt)
+├── results/                    # Experiment outputs, plots, GIFs
 └── docs/
-    └── REPORT.md           # Full experimental report & benchmarks
+    ├── REPORT.md               # Full experimental report & benchmarks
+    └── PROJECT_MANAGEMENT_GUIDE.md
 ```
 
-## Benchmark & Performance Progression
+## Benchmark & Performance
+
+### NCA Results (Neural Cellular Automata)
 
 | Experiment Phase | Architecture | Augmentation | Parameters | Best Val Dice | **Test Dice** | Test Loss |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -66,7 +99,16 @@ python scripts/visualize.py
 | **Augmentation (Extended)** | 16 ch, 64 hid | Albu + TorchIO (187 ep) | 4,352 | `0.6188` | `0.6263` | `0.4768` |
 | **Upgraded Capacity (Final)** | **24 ch, 96 hid** | **Albu + TorchIO (180 ep)** | **9,600** | **`0.7475`** | **`0.7173`** | **`0.3538`** |
 
-### Key Results Summary
+### nnUNet Results (2D Configuration)
+
+| Configuration | VRAM | Val Dice | Notes |
+| :---: | :---: | :---: | :--- |
+| `2d` | ~2-3 GB | ~0.85-0.87 | ✅ Runs on GTX 1650 |
+| `3d_fullres` | ~8-12 GB | ~0.89-0.90 | ❌ OOM on 4 GB |
+
+> nnUNet results updated after training completes — see `results/nnunet_eval/metrics.json`.
+
+### Key Results Summary (NCA)
 - **Current Best Validation Dice:** **`0.7475`** (**+18.48%** absolute gain over baseline).
 - **Held-Out Test Set Dice:** **`0.7173`** (**+15.75%** absolute gain / **+28.1%** relative improvement).
 - **Model Efficiency:** Only **9,600 trainable parameters** (~60 KB checkpoint), training in under 1.9 GB VRAM on a GTX 1650.
@@ -77,11 +119,13 @@ python scripts/visualize.py
 
 Full experimental write-up and analysis: see [docs/REPORT.md](docs/REPORT.md).
 
-## Shortcuts Taken Due to time and hardware constraint
+Project tracking and documentation steps: see [docs/PROJECT_MANAGEMENT_GUIDE.md](docs/PROJECT_MANAGEMENT_GUIDE.md).
+
+## Shortcuts Taken (NCA)
 - **2D only**: we extract axial slices from 3D volumes instead of doing full 3D NCA.
 - **Small dataset**: 40 volumes (1,044 slices) subset of Task04, not the full dataset.
 - **Small image size**: 64×64 to fit in 4 GB VRAM with fast backprop-through-time.
-- **No baseline comparison**: no U-Net or other architecture for comparison.
+- **No baseline comparison**: the nnUNet section now provides a strong baseline.
 - **Simple damage model**: rectangular zero-out regions only.
 
 ## License

@@ -117,6 +117,36 @@ The figure below compares 10%, 30%, and 50% damage applied at Step 16 to the sam
 
 ## 7. Limitations & Constraints
 1. **2D vs. 3D:** Hippocampus MRI volumes are natively 3D. We extracted 2D axial slices to keep memory and backprop-through-time tractable on a 4 GB GPU.
-2. **Subsampled Dataset:** 40 volumes (1,044 slices) out of the full Task04 cohort were used for rapid iteration.
+2. **Subsampled Dataset:** 40 volumes (1,044 slices) out of the full Task04 cohort were used for rapid iteration in the initial NCA phase.
 3. **Modest Resolution:** Images were processed at $64 \times 64$ to enable fast recurrent unrolling.
 4. **Simple Damage Geometry:** Damage was modeled as rectangular zero-outs rather than adversarial or topological cuts.
+
+---
+
+## 8. Comparative Paradigm: nnUNet v2 Implementation
+
+To evaluate the self-repairing NCA against the gold standard in biomedical image segmentation, we implemented a complementary **nnUNet v2** pipeline on the same dataset (Medical Segmentation Decathlon Task04 Hippocampus).
+
+### Architectural Contrast
+
+| Dimension | Neural Cellular Automata (NCA) | nnUNet (2D PlainConvUNet) |
+| :--- | :--- | :--- |
+| **Paradigm** | Dynamical fixed-point attractor | Hierarchical feed-forward encoder-decoder |
+| **Model Size** | **9,600 parameters** (~60 KB) | ~300,000+ parameters |
+| **Receptive Field** | Emergent via recurrent local $3 \times 3$ steps | Multi-scale downsampling/upsampling pooling |
+| **Inference Mechanism** | Iterative state evolution ($T \approx 32$ steps) | Single forward pass |
+| **Self-Repair Ability** | **Intrinsic** (heals 50% state corruption mid-run) | **None** (latent corruption propagates catastrophically) |
+| **Primary Goal** | Robustness, self-healing, bio-inspired plasticity | Maximum static Dice overlap score |
+
+### nnUNet Configuration on GTX 1650 (4 GB VRAM)
+
+- **Dataset Identifier:** `Dataset004_Hippocampus` (260 train cases, 130 test cases)
+- **Configuration:** `2d` PlainConvUNet (4 stages: 32 → 64 → 128 → 256 channels)
+- **Patch Size:** $56 \times 40$ voxels
+- **VRAM Utilization:** ~1.58 GB (well within the 4.096 GB limit of the GTX 1650)
+- **Data Augmentation:** Single-threaded pipeline (`nnUNet_n_proc_DA=0`) configured specifically to prevent Windows IPC/multiprocessing deadlocks in sandboxed environments.
+- **Pipeline Scripts:**
+  - Setup & reformatting: `nnunet/setup_nnunet_dataset.py`
+  - Training driver: `nnunet/run_training.py`
+  - Inference & evaluation: `nnunet/run_predict_eval.py`
+  - Metric analysis: `nnunet/evaluate_predictions.py`
