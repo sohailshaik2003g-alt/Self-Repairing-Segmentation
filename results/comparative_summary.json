@@ -1,0 +1,14 @@
+{
+    "nca_best_val_dice": 0.7475,
+    "nca_test_dice": 0.7173,
+    "nca_parameters": 9600,
+    "nnunet_val_dice": 0.7887,
+    "nnunet_anterior_dice": 0.7857,
+    "nnunet_posterior_dice": 0.7917,
+    "nnunet_parameters": 312000,
+    "repair_recoveries": {
+        "10_percent_damage": "99.3% - 100.5%",
+        "30_percent_damage": "79.1% - 89.7%",
+        "50_percent_damage": "74.5% - 86.7%"
+    }
+}

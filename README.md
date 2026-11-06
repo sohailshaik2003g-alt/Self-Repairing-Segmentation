@@ -107,6 +107,28 @@ python nnunet/run_predict_eval.py --fold 0
 
 > Metrics verified empirically on held-out 52 validation cases via `results/nnunet_eval/metrics.json`.
 
+### Visual Comparisons & Cross-Paradigm Analysis
+
+#### 1. Direct Visual Segmentation Comparison (NCA vs nnUNet)
+Comparison across representative axial slices showing raw MRI, Ground Truth, NCA prediction (9.6k parameters), nnUNet prediction (300k+ parameters), and nnUNet error maps (Green=True Positive, Orange=False Positive, Magenta=False Negative):
+
+![Model Visual Comparison](results/model_comparison_visual.png)
+
+#### 2. Comparative Training & Convergence Curves
+Convergence trajectory, validation Dice progression across model iterations, and the efficiency-vs-performance frontier:
+
+![Comparative Training Curves](results/comparative_training_curves.png)
+
+#### 3. Step-by-Step Self-Repair Progression (NCA Healing Grid)
+Iterative state evolution showing how the NCA dynamical system regenerates a segmentation after 35% of its internal cell state is wiped out at Step 16:
+
+![NCA Healing Grid](results/comparative_healing_grid.png)
+
+#### 4. Quantitative Self-Repair Resilience & Capability Matrix
+Quantitative recovery across damage severities (10%, 30%, 50%) and timing regimes, alongside an architectural capability comparison against conventional feedforward U-Nets:
+
+![Self-Repair Analysis](results/comparative_repair_analysis.png)
+
 ### Key Results Summary (NCA)
 - **Current Best Validation Dice:** **`0.7475`** (**+18.48%** absolute gain over baseline).
 - **Held-Out Test Set Dice:** **`0.7173`** (**+15.75%** absolute gain / **+28.1%** relative improvement).

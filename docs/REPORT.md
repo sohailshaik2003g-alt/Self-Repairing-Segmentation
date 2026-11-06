@@ -155,3 +155,17 @@ To evaluate the self-repairing NCA against the gold standard in biomedical image
   - Training driver: `nnunet/run_training.py`
   - Inference & evaluation: `nnunet/run_predict_eval.py`
   - Metric analysis: `nnunet/evaluate_predictions.py`
+
+### Visual & Quantitative Comparisons
+
+#### Slice-by-Slice Direct Model Output
+![Model Visual Comparison](../results/model_comparison_visual.png)
+
+#### Training & Convergence Comparison
+![Comparative Training Curves](../results/comparative_training_curves.png)
+
+#### Self-Repair Mechanics & Dynamical Regeneration
+![Comparative Healing Grid](../results/comparative_healing_grid.png)
+
+#### Quantitative Repair Sweep & Capability Matrix
+![Comparative Repair Analysis](../results/comparative_repair_analysis.png)
