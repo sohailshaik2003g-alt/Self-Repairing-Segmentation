@@ -101,12 +101,11 @@ python nnunet/run_predict_eval.py --fold 0
 
 ### nnUNet Results (2D Configuration)
 
-| Configuration | VRAM | Val Dice | Notes |
-| :---: | :---: | :---: | :--- |
-| `2d` | ~2-3 GB | ~0.85-0.87 | ✅ Runs on GTX 1650 |
-| `3d_fullres` | ~8-12 GB | ~0.89-0.90 | ❌ OOM on 4 GB |
+| Configuration | VRAM | Val Dice (Mean) | Anterior (Label 1) | Posterior (Label 2) | vs. NCA Baseline |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| **`2d` (Fold 0)** | **1.58 GB** | **`0.7887`** | **`0.7857`** | **`0.7917`** | **+0.0412 vs Val / +0.0714 vs Test** |
 
-> nnUNet results updated after training completes — see `results/nnunet_eval/metrics.json`.
+> Metrics verified empirically on held-out 52 validation cases via `results/nnunet_eval/metrics.json`.
 
 ### Key Results Summary (NCA)
 - **Current Best Validation Dice:** **`0.7475`** (**+18.48%** absolute gain over baseline).

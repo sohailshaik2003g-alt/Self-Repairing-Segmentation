@@ -145,6 +145,11 @@ To evaluate the self-repairing NCA against the gold standard in biomedical image
 - **Patch Size:** $56 \times 40$ voxels
 - **VRAM Utilization:** ~1.58 GB (well within the 4.096 GB limit of the GTX 1650)
 - **Data Augmentation:** Single-threaded pipeline (`nnUNet_n_proc_DA=0`) configured specifically to prevent Windows IPC/multiprocessing deadlocks in sandboxed environments.
+- **Empirical Validation Results (Fold 0, 52 held-out validation volumes):**
+  - **Mean Foreground Dice:** **`0.7887`** (**+0.0714** over NCA test Dice of 0.7173)
+  - **Anterior Hippocampus (Label 1) Dice:** **`0.7857`** (IoU: 0.6518)
+  - **Posterior Hippocampus (Label 2) Dice:** **`0.7917`** (IoU: 0.6587)
+  - **Training Loss:** -0.2079 | **Validation Loss:** -0.6689
 - **Pipeline Scripts:**
   - Setup & reformatting: `nnunet/setup_nnunet_dataset.py`
   - Training driver: `nnunet/run_training.py`
